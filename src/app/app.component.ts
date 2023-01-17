@@ -11,8 +11,8 @@ import { product } from './modules/products';
 })
 export class AppComponent implements OnInit {
   title = 'angular-http';
-  allProducts: product[]=[]
-
+  allProducts: product[]=[];
+  isFetching: boolean = false;
   constructor(private http: HttpClient){}
 
   ngOnInit(){
@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   private fetchProducts(){
+    this.isFetching= true
     this.http.get<{[key:string]:product}>('https://angulartest-af804-default-rtdb.firebaseio.com/products.json'
     ).pipe(map((res)=>{
       const products = []
@@ -47,6 +48,21 @@ export class AppComponent implements OnInit {
     .subscribe((product)=>{
       console.log(product)
       this.allProducts = product
+      this.isFetching =false
     })
   }
+
+  onDeleteProduct(id:string){
+    this.http.delete
+    ('https://angulartest-af804-default-rtdb.firebaseio.com/products/'+id+'.json')
+    .subscribe();
+  }
+
+  allDelete(){
+    this.http.delete
+    ('https://angulartest-af804-default-rtdb.firebaseio.com/products/.json')
+    .subscribe();
+  }
+
+
 }
