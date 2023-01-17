@@ -15,9 +15,31 @@
 
   </form>
   
-   <button>save</button>
+   
 </div>
 
 <div>
   <p>s</p>
+  <table>
+    <tr>
+      <th>Id</th>
+
+      <th>name</th>
+
+      <th>description</th>
+
+      <th>price</th>
+    </tr>
+    <tr *ngFor="let prod of allProducts; index as i">
+      <td>{{i+1}} </td>
+      <td>{{prod.pName}}</td>
+
+      <td>{{prod.desc}}</td>
+
+      <td>{{prod.price}}</td>
+      <td><button>delete</button></td>
+
+    </tr>
+  </table>
+  <input type="submit" (click)="onProductFetch()" >
 </div>
