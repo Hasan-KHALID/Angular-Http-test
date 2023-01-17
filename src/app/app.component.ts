@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-http';
+
+  onProductCreate(products: {pName: string, dese:string, price:string}){
+    console.log(products)
+  }
 }
