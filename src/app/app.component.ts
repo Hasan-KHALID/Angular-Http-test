@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { map } from 'rxjs';
 import { product } from './modules/products';
+import { ProductsServiceService } from './service/products-service.service';
 
 
 @Component({
@@ -13,7 +15,11 @@ export class AppComponent implements OnInit {
   title = 'angular-http';
   allProducts: product[]=[];
   isFetching: boolean = false;
-  constructor(private http: HttpClient){}
+  editMode: boolean=false
+  currentProductId: string;
+  @ViewChild('productsForm') form:NgForm;
+
+  constructor(private http: HttpClient, private productService: ProductsServiceService){}
 
   ngOnInit(){
     this.fetchProducts()
@@ -24,13 +30,12 @@ export class AppComponent implements OnInit {
   }
 
   onProductCreate(products: {pName: string, dese:string, price:string}){
-    console.log(products)
-    const header = new HttpHeaders({'myHeader': 'testing'})
-    this.http.
-    post<{name: string}>('https://angulartest-af804-default-rtdb.firebaseio.com/products.json', 
-    products,{headers: header}).subscribe((res)=>{
-      console.log(res)
-    })
+    if(!this.editMode){
+      this.productService.createProduct(products)
+    }
+    else{
+      this.productService.updateProducts(this.currentProductId, products)
+    }
   }
 
   private fetchProducts(){
@@ -62,6 +67,20 @@ export class AppComponent implements OnInit {
     this.http.delete
     ('https://angulartest-af804-default-rtdb.firebaseio.com/products/.json')
     .subscribe();
+  }
+
+  onEditClick(id: string){
+    this.currentProductId = id
+    let currentProduct= this.allProducts.find((p)=>{
+      return p.id===id
+    })
+    console.log(currentProduct)
+    this.form.setValue({
+      pName: currentProduct.pName,
+      desc: currentProduct.desc,
+      price: currentProduct.price
+    })
+    this.editMode =true
   }
 
 
